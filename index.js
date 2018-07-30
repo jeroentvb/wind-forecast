@@ -15,14 +15,13 @@ module.exports = express()
   .use(notFound)
   .listen(port, () => console.log(`Server listening on port ${port}...`))
 
-function test(req, res) {
-  res.render('index', {
-    page: 'Home'
-  })
-}
-
 function index(req, res) {
   url = 'https://www.windfinder.com/weatherforecast/tarifa'
+
+  function spliceToFirstDay(array) {
+    array.splice(0, 7)
+    array.splice(15, 100)
+  }
 
   var useOfflineData = true
 
@@ -40,43 +39,53 @@ function index(req, res) {
       } else {
         var $ = cheerio.load(html)
 
-        var spot
-        var windSpeed = new Array
-        var windGust = new Array
-        var windDirection = new Array
-        var windfinder = new Object
+        var windfinder = {
+          spot: '',
+          date: new Array,
+          time: new Array,
+          windspeed: new Array,
+          windgust: new Array,
+          winddirection: new Array
+        }
 
         // Get the spots name
         $('#spotheader-spotname').filter(function() {
-          // var data = $(this)
           spot = $(this).text()
         })
         windfinder.spot = spot
 
+        // Get the dates
+        $('.weathertable__header').find($('h4')).filter(function(i) {
+          windfinder.date[i] = $(this).text()
+        })
+
         // Get the average wind speed
         $('.data--major').find($('.units-ws')).filter(function(i) {
-          // var data = $(this)
-          windSpeed[i] = $(this).text()
+          windfinder.windspeed[i] = $(this).text()
         })
+        spliceToFirstDay(windfinder.windspeed)
 
         // Get the wind gusts
         $('.data-gusts').find($('.units-ws')).filter(function(i) {
-          windGust[i] = $(this).text()
+          windfinder.windgust[i] = $(this).text()
         })
+        spliceToFirstDay(windfinder.windgust)
 
-        // Get the wind direction
+        // Get the wind direction; do some converting
         $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
-          windDirection[i] = $(this).attr('title')
+          var data = new Number($(this).attr('title').replace('°', ' ')) - 180
 
+          // This can be used to calculate the wind direction in wind direction instead of angles
+          // var val = Math.floor((data / 22.5) + 0.5)
+          // var windDirections = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+          // windDirection[i] = windDirections[(val % 16)]
+
+          windfinder.winddirection[i] = data
         })
+        spliceToFirstDay(windfinder.winddirection)
 
-        windfinder.windgust = new Array
-        windfinder.windspeed = new Array
-        windfinder.winddirection = new Array
-        for (let i=7; i < 22; i++) {
-          windfinder.windspeed[i - 7] = windSpeed[i]
-          windfinder.windgust[i - 7] = windGust[i]
-          windfinder.winddirection[i - 7] = windDirection[i]
+        for (let i=0; i < windfinder.winddirection.length; i++) {
+          windfinder.time[i] = i + 7 + 'h'
         }
 
         // Render the page with all the data
@@ -84,11 +93,14 @@ function index(req, res) {
           page: 'Wind forecasts',
           windfinder: {
             spot: windfinder.spot,
+            date: windfinder.date,
+            time: windfinder.time,
             windspeed: windfinder.windspeed,
             windgust: windfinder.windgust,
             winddirection: windfinder.winddirection
           }
         })
+        exportData(windfinder)
       }
     })
   }
@@ -96,17 +108,24 @@ function index(req, res) {
 
 function exportData(jsonObject) {
   fs.writeFile('offline-data.json', JSON.stringify(jsonObject, null, 4), function(err) {
-    console.log(chalk.yellow('File written'))
+    if (err) {
+      throw err
+    } else {
+      console.log(chalk.yellow('File written'))
+    }
   })
 }
 
 function offlineData(res) {
   console.log(chalk.yellow('Offline data is being used..'))
   var windfinder = require('./offline-data.json')
+
   res.render('index', {
     page: 'Wind forecasts',
     windfinder: {
       spot: windfinder.spot,
+      date: windfinder.date,
+      time: windfinder.time,
       windspeed: windfinder.windspeed,
       windgust: windfinder.windgust,
       winddirection: windfinder.winddirection

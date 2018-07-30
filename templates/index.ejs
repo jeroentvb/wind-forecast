@@ -2,12 +2,10 @@
 
 <h1>Wind forecasts</h1>
 
-<!--<h2><%= windfinder.spot %></h2>
+<h2>Spot: <%= windfinder.spot %></h2>
+<h3>Date: <%= windfinder.date[0] %></h3>
 
-<p><%= windfinder.windspeed %></p>
-<p><%= windfinder.windgust %></p>-->
-
-<h3>Windfinder</h3>
+<h4>Source: Windfinder</h4>
 <table>
   <thead>
     <tr>
@@ -17,11 +15,14 @@
   <tbody>
     <tr>
       <th>Local time</th>
+      <% for(let i=0; i < windfinder.time.length; i++) { %>
+        <td><%= windfinder.time[i] %></td>
+      <% } %>
     </tr>
     <tr>
       <th>Winddirection</tdh>
         <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
-          <td><%= windfinder.winddirection[i] %></td>
+          <td><img src="img/arrow.svg" alt="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] %>deg)"></td>
         <% } %>
     </tr>
     <tr>
