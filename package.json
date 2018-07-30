@@ -9,6 +9,7 @@
   "author": "Jeroen",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^2.4.1",
     "cheerio": "^1.0.0-rc.2",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
