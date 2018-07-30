@@ -2,9 +2,41 @@
 
 <h1>Wind forecasts</h1>
 
-<h2><%= windfinder.spot %></h2>
+<!--<h2><%= windfinder.spot %></h2>
 
 <p><%= windfinder.windspeed %></p>
-<p><%= windfinder.windgust %></p>
+<p><%= windfinder.windgust %></p>-->
+
+<h3>Windfinder</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Local time</th>
+    </tr>
+    <tr>
+      <th>Winddirection</tdh>
+        <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
+          <td><%= windfinder.winddirection[i] %></td>
+        <% } %>
+    </tr>
+    <tr>
+      <th>Average windspeed</th>
+      <% for(let i=0; i < windfinder.windspeed.length; i++) { %>
+        <td><%= windfinder.windspeed[i] %></td>
+      <% } %>
+    </tr>
+    <tr>
+      <th>Wind gusts</th>
+      <% for(let i=0; i < windfinder.windgust.length; i++) { %>
+        <td><%= windfinder.windgust[i] %></td>
+      <% } %>
+    </tr>
+  </tbody>
+</table>
 
 <% include tail %>

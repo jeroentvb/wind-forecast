@@ -24,51 +24,92 @@ function test(req, res) {
 function index(req, res) {
   url = 'https://www.windfinder.com/weatherforecast/tarifa'
 
-  request(url, function(error, response, html) {
-    if(error) {
-      res.render('error', {
-        page: 'error',
-        error: error
-      })
-      throw error
-    } else {
-      var $ = cheerio.load(html)
+  var useOfflineData = true
 
-      var spot
-      var windspeed = new Array
-      var windgust = new Array
-      var windfinder = new Object
+  if (useOfflineData == true) {
+    offlineData(res)
+  } else {
+    console.log(chalk.yellow('Live data is being used..'))
+    request(url, function(error, response, html) {
+      if(error) {
+        res.render('error', {
+          page: 'error',
+          error: error
+        })
+        throw error
+      } else {
+        var $ = cheerio.load(html)
 
-      $('#spotheader-spotname').filter(function() {
-        // var data = $(this)
-        spot = $(this).text()
-      })
-      windfinder.spot = spot
+        var spot
+        var windSpeed = new Array
+        var windGust = new Array
+        var windDirection = new Array
+        var windfinder = new Object
 
-      $('.data--major').find($('.units-ws')).filter(function(i) {
-        // var data = $(this)
-        windspeed[i] = $(this).text()
-      })
+        // Get the spots name
+        $('#spotheader-spotname').filter(function() {
+          // var data = $(this)
+          spot = $(this).text()
+        })
+        windfinder.spot = spot
 
-      $('.data-gusts').find($('.units-ws')).filter(function(i) {
-        windgust[i] = $(this).text()
-      })
+        // Get the average wind speed
+        $('.data--major').find($('.units-ws')).filter(function(i) {
+          // var data = $(this)
+          windSpeed[i] = $(this).text()
+        })
 
-      windfinder.windgust = new Array
-      windfinder.windspeed = new Array
-      for (let i=7; i < 22; i++) {
-        windfinder.windspeed[i - 7] = windspeed[i]
-        windfinder.windgust[i - 7] = windgust[i]
-      }
+        // Get the wind gusts
+        $('.data-gusts').find($('.units-ws')).filter(function(i) {
+          windGust[i] = $(this).text()
+        })
 
-      res.render('index', {
-        page: 'Wind forecasts',
-        windfinder: {
-          spot: windfinder.spot,
-          windspeed: windfinder.windspeed,
-          windgust: windfinder.windgust
+        // Get the wind direction
+        $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
+          windDirection[i] = $(this).attr('title')
+
+        })
+
+        windfinder.windgust = new Array
+        windfinder.windspeed = new Array
+        windfinder.winddirection = new Array
+        for (let i=7; i < 22; i++) {
+          windfinder.windspeed[i - 7] = windSpeed[i]
+          windfinder.windgust[i - 7] = windGust[i]
+          windfinder.winddirection[i - 7] = windDirection[i]
         }
-      })
+
+        // Render the page with all the data
+        res.render('index', {
+          page: 'Wind forecasts',
+          windfinder: {
+            spot: windfinder.spot,
+            windspeed: windfinder.windspeed,
+            windgust: windfinder.windgust,
+            winddirection: windfinder.winddirection
+          }
+        })
+      }
+    })
+  }
+}
+
+function exportData(jsonObject) {
+  fs.writeFile('offline-data.json', JSON.stringify(jsonObject, null, 4), function(err) {
+    console.log(chalk.yellow('File written'))
+  })
+}
+
+function offlineData(res) {
+  console.log(chalk.yellow('Offline data is being used..'))
+  var windfinder = require('./offline-data.json')
+  res.render('index', {
+    page: 'Wind forecasts',
+    windfinder: {
+      spot: windfinder.spot,
+      windspeed: windfinder.windspeed,
+      windgust: windfinder.windgust,
+      winddirection: windfinder.winddirection
     }
   })
 }
