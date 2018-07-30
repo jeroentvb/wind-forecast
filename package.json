@@ -1,0 +1,18 @@
+{
+  "name": "wind-forecast",
+  "version": "1.0.0",
+  "description": "An app to gather wind forecast data from different services",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index"
+  },
+  "author": "Jeroen",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "nodemon": "^1.18.3",
+    "request": "^2.87.0"
+  }
+}
