@@ -15,21 +15,30 @@ module.exports = express()
   .use(notFound)
   .listen(port, () => console.log(`Server listening on port ${port}...`))
 
+var useOfflineData = false
+
 function index(req, res) {
-  url = 'https://www.windfinder.com/weatherforecast/tarifa'
+  windfinderUrl = 'https://www.windfinder.com/weatherforecast/tarifa'
 
-  function spliceToFirstDay(array) {
-    array.splice(0, 7)
-    array.splice(15, 100)
-  }
-
-  var useOfflineData = true
 
   if (useOfflineData == true) {
     offlineData(res)
   } else {
     console.log(chalk.yellow('Live data is being used..'))
-    request(url, function(error, response, html) {
+
+    var windfinder = {
+      name: 'windfinder',
+      done: false,
+      spot: '',
+      date: new Array,
+      time: new Array,
+      windspeed: new Array,
+      windgust: new Array,
+      winddirection: new Array
+    }
+
+
+    request(windfinderUrl, function(error, response, html) {
       if(error) {
         res.render('error', {
           page: 'error',
@@ -39,20 +48,10 @@ function index(req, res) {
       } else {
         var $ = cheerio.load(html)
 
-        var windfinder = {
-          spot: '',
-          date: new Array,
-          time: new Array,
-          windspeed: new Array,
-          windgust: new Array,
-          winddirection: new Array
-        }
-
         // Get the spots name
         $('#spotheader-spotname').filter(function() {
-          spot = $(this).text()
+          windfinder.spot = $(this).text()
         })
-        windfinder.spot = spot
 
         // Get the dates
         $('.weathertable__header').find($('h4')).filter(function(i) {
@@ -88,22 +87,30 @@ function index(req, res) {
           windfinder.time[i] = i + 7 + 'h'
         }
 
-        // Render the page with all the data
-        res.render('index', {
-          page: 'Wind forecasts',
-          windfinder: {
-            spot: windfinder.spot,
-            date: windfinder.date,
-            time: windfinder.time,
-            windspeed: windfinder.windspeed,
-            windgust: windfinder.windgust,
-            winddirection: windfinder.winddirection
-          }
-        })
-        exportData(windfinder)
+        // exportData(windfinder)
       }
+
+      windfinder.done = true
+      render()
+
     })
+
+    function render() {
+      if(windfinder.done == true)
+      res.render('index', {
+        page: 'Wind forecasts',
+        windfinder: windfinder
+      })
+    }
+
   }
+}
+
+function spliceToFirstDay(array) {
+  // Start at 7h
+  array.splice(0, 7)
+  // end at 21h
+  array.splice(15, 60)
 }
 
 function exportData(jsonObject) {
@@ -122,14 +129,7 @@ function offlineData(res) {
 
   res.render('index', {
     page: 'Wind forecasts',
-    windfinder: {
-      spot: windfinder.spot,
-      date: windfinder.date,
-      time: windfinder.time,
-      windspeed: windfinder.windspeed,
-      windgust: windfinder.windgust,
-      winddirection: windfinder.winddirection
-    }
+    windfinder: windfinder
   })
 }
 
