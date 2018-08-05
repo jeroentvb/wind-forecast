@@ -61,4 +61,5 @@ typings/
 .next
 
 # project related excludes
-offline-data.json
+windfinderoffline-data.json
+windguruoffline-data.json
