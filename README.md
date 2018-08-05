@@ -7,8 +7,9 @@ It currently only works with windfinder superforecast urls.
 ## How to use
 I'm assuming you already have `nodejs` and `npm` installed.
 After downloading/cloning the app, run `npm install` and `npm build`.
-Open `index.js` in your favorite text editor and replace the string in ```js
-windfinderUrl
+Open `index.js` in your favorite text editor and replace the string in 
+```js
+var windfinderUrl
 ```
 with the link to the superforecast of your local spot.
 To launch the app use `node index.js`.
