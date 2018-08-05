@@ -3,7 +3,7 @@ const request = require('request')
 const cheerio = require('cheerio')
 const Nightmare = require('nightmare')
 const nightmare = Nightmare({
-  show: true
+  show: false
 })
 const chalk = require('chalk')
 const fs = require('fs')
@@ -19,11 +19,11 @@ module.exports = express()
   .use(notFound)
   .listen(port, () => console.log(`Server listening on port ${port}...`))
 
-var useOfflineData = true
+var useOfflineData = false
 
 function index(req, res) {
-  windfinderUrl = 'https://www.windfinder.com/weatherforecast/tarifa'
-  windguruUrl = 'https://www.windguru.cz/43'
+  windfinderUrl = 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout'
+  windguruUrl = 'https://www.windguru.cz/46940'
 
   // Throw error if the links aren't specified
   if(windfinderUrl.length < 22 || windguruUrl.length < 19) {
@@ -50,64 +50,61 @@ function index(req, res) {
       winddirection: new Array
     }
 
-    var windfinder = require('./windfinderoffline-data.json')
+    request(windfinderUrl, function(error, response, html) {
+      if(error) {
+        res.render('error', {
+          page: 'error',
+          error: error
+        })
+        throw error
+      } else {
+        var $ = cheerio.load(html)
 
-    // request(windfinderUrl, function(error, response, html) {
-    //   if(error) {
-    //     res.render('error', {
-    //       page: 'error',
-    //       error: error
-    //     })
-    //     throw error
-    //   } else {
-    //     var $ = cheerio.load(html)
-    //
-    //     // Get the spots name
-    //     $('#spotheader-spotname').filter(function() {
-    //       windfinder.spot = $(this).text()
-    //     })
-    //
-    //     // Get the dates
-    //     $('.weathertable__header').find($('h4')).filter(function(i) {
-    //       windfinder.date[i] = $(this).text()
-    //     })
-    //
-    //     // Get the average wind speed
-    //     $('.data--major').find($('.units-ws')).filter(function(i) {
-    //       windfinder.windspeed[i] = $(this).text()
-    //     })
-    //     spliceToFirstDay(windfinder.windspeed)
-    //
-    //     // Get the wind gusts
-    //     $('.data-gusts').find($('.units-ws')).filter(function(i) {
-    //       windfinder.windgust[i] = $(this).text()
-    //     })
-    //     spliceToFirstDay(windfinder.windgust)
-    //
-    //     // Get the wind direction; do some converting
-    //     $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
-    //       var data = new Number($(this).attr('title').replace('°', ' ')) - 180
-    //
-    //       // This can be used to calculate the wind direction in wind direction instead of angles
-    //       // var val = Math.floor((data / 22.5) + 0.5)
-    //       // var windDirections = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-    //       // windDirection[i] = windDirections[(val % 16)]
-    //
-    //       windfinder.winddirection[i] = data
-    //     })
-    //     spliceToFirstDay(windfinder.winddirection)
-    //
-    //     for (let i=0; i < windfinder.winddirection.length; i++) {
-    //       windfinder.time[i] = i + 7 + 'h'
-    //     }
-    //
-    //     exportData(windfinder, 'windfinder')
-    //   }
-    //
-    //   windfinder.done = true
-    //   // render()
-    //
-    // })
+        // Get the spots name
+        $('#spotheader-spotname').filter(function() {
+          windfinder.spot = $(this).text()
+        })
+
+        // Get the dates
+        $('.weathertable__header').find($('h4')).filter(function(i) {
+          windfinder.date[i] = $(this).text()
+        })
+
+        // Get the average wind speed
+        $('.data--major').find($('.units-ws')).filter(function(i) {
+          windfinder.windspeed[i] = $(this).text()
+        })
+        spliceToFirstDay(windfinder.windspeed)
+
+        // Get the wind gusts
+        $('.data-gusts').find($('.units-ws')).filter(function(i) {
+          windfinder.windgust[i] = $(this).text()
+        })
+        spliceToFirstDay(windfinder.windgust)
+
+        // Get the wind direction; do some converting
+        $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
+          var data = new Number($(this).attr('title').replace('°', ' ')) - 180
+
+          // This can be used to calculate the wind direction in wind direction instead of angles
+          // var val = Math.floor((data / 22.5) + 0.5)
+          // var windDirections = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+          // windDirection[i] = windDirections[(val % 16)]
+
+          windfinder.winddirection[i] = data
+        })
+        spliceToFirstDay(windfinder.winddirection)
+
+        for (let i=0; i < windfinder.winddirection.length; i++) {
+          windfinder.time[i] = i + 7 + 'h'
+        }
+        // Export the windfinder data to a file
+        // exportData(windfinder, 'windfinder')
+      }
+
+      windfinder.done = true
+
+    })
 
     var windguru = {
       name: 'WindGuru',
@@ -171,9 +168,16 @@ function index(req, res) {
         // Harmonie weather model
         windguruModel('harmonie', '2', $, windguru, 15, 60)
         windguruModel('icon7', '4', $, windguru, 12, 60)
-        windguruModel('cosmo', '4', $, windguru)
+        windguruModel('cosmo', '1', $, windguru, 9, 60)
+        windguruModel('icon13', '6', $, windguru, 5, 60)
+        windguruModel('gsf', '0', $, windguru, 5, 60)
+        windguruModel('wrf', '3', $, windguru, 15, 60)
 
-        exportData(windguru, 'windguru')
+        // Export the windguru data
+        // exportData(windguru, 'windguru')
+
+        windguru.done = true
+
         render(res, windfinder, windguru)
       })
       .catch(error => console.log(error))
@@ -181,6 +185,13 @@ function index(req, res) {
   }
 }
 
+// Explaination of function var needed to pass on
+// Model = wind model. Used to store in windguru object (windguru.model)
+// number = Number of graph on the windguru website
+// $ = $. Pass the $ for cheerio to use
+// windguru = the object to store info in. I've given it a fixed name: WindGuru
+// spliceStart = start removing items from the array to be left with 1 day of data
+// sliceEnd = stop removing items from the array
 function windguruModel(model, number, $, windguru, spliceStart, spliceEnd) {
   // Get time
   $(`#tabid_${number}_0_dates`).find('.day1').filter(function(i) {
@@ -192,7 +203,6 @@ function windguruModel(model, number, $, windguru, spliceStart, spliceEnd) {
     windguru[model].windspeed[i] = $(this).text()
   })
   windguru[model].windspeed.splice(spliceStart, spliceEnd)
-  console.log(windguru[model].windspeed)
   // Get windgust
   $(`#tabid_${number}_0_GUST`).find('td').filter(function(i) {
     windguru[model].windgust[i] = $(this).text()

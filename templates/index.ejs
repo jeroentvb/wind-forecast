@@ -4,8 +4,7 @@
 
 <h2>Spot: <%= windfinder.spot %></h2>
 <!--h3>Date: <%= windfinder.date[0] %></h3>-->
-
-<h4>Source: Windfinder</h4>
+<h4>Windfinder</h4>
 <table>
   <thead>
     <tr>
@@ -40,73 +39,52 @@
   </tbody>
 </table>
 
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Local time</th>
-      <% for(let i=0; i < windguru.harmonie.time.length; i++) { %>
-        <td><%= windguru.harmonie.time[i] %></td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Winddirection</tdh>
-        <% for(let i=0; i < windguru.harmonie.winddirection.length; i++) { %>
-          <td><img src="img/arrow.svg" alt="wind-direction-arrow" style="transform: rotate(<%= windguru.harmonie.winddirection[i] %>deg)"></td>
+<h4>Windguru</h4>
+<% function renderWindguru(model) { %>
+  <table>
+    <thead>
+      <tr>
+        <th><%= model %></th>
+      </tr>
+      <tr>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Local time</th>
+        <% for(let i=0; i < windguru[model].time.length; i++) { %>
+          <td><%= windguru[model].time[i] %></td>
         <% } %>
-    </tr>
-    <tr>
-      <th>Average windspeed</th>
-      <% for(let i=0; i < windguru.harmonie.windspeed.length; i++) { %>
-        <td><%= windguru.harmonie.windspeed[i] %></td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Wind gusts</th>
-      <% for(let i=0; i < windguru.harmonie.windgust.length; i++) { %>
-        <td><%= windguru.harmonie.windgust[i] %></td>
-      <% } %>
-    </tr>
-  </tbody>
-</table>
+      </tr>
+      <tr>
+        <th>Winddirection</tdh>
+          <% for(let i=0; i < windguru[model].winddirection.length; i++) { %>
+            <td><img src="img/arrow.svg" alt="wind-direction-arrow" style="transform: rotate(<%= windguru[model].winddirection[i] %>deg)"></td>
+          <% } %>
+      </tr>
+      <tr>
+        <th>Average windspeed</th>
+        <% for(let i=0; i < windguru[model].windspeed.length; i++) { %>
+          <td><%= windguru[model].windspeed[i] %></td>
+        <% } %>
+      </tr>
+      <tr>
+        <th>Wind gusts</th>
+        <% for(let i=0; i < windguru[model].windgust.length; i++) { %>
+          <td><%= windguru[model].windgust[i] %></td>
+        <% } %>
+      </tr>
+    </tbody>
+  </table>
+<% } %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Local time</th>
-      <% for(let i=0; i < windguru.icon7.time.length; i++) { %>
-        <td><%= windguru.icon7.time[i] %></td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Winddirection</tdh>
-        <% for(let i=0; i < windguru.icon7.winddirection.length; i++) { %>
-          <td><img src="img/arrow.svg" alt="wind-direction-arrow" style="transform: rotate(<%= windguru.icon7.winddirection[i] %>deg)"></td>
-        <% } %>
-    </tr>
-    <tr>
-      <th>Average windspeed</th>
-      <% for(let i=0; i < windguru.icon7.windspeed.length; i++) { %>
-        <td><%= windguru.icon7.windspeed[i] %></td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Wind gusts</th>
-      <% for(let i=0; i < windguru.icon7.windgust.length; i++) { %>
-        <td><%= windguru.icon7.windgust[i] %></td>
-      <% } %>
-    </tr>
-  </tbody>
-</table>
+<%- renderWindguru('harmonie') %>
+<%- renderWindguru('icon7') %>
+<%- renderWindguru('cosmo') %>
+<%- renderWindguru('icon13') %>
+<%- renderWindguru('gsf') %>
+<%- renderWindguru('wrf') %>
 
 
 <% include tail %>
