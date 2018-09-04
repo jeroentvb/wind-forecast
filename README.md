@@ -1,3 +1,8 @@
+## Please note
+This app scrapes data from other websites.
+Scraping websites is a grey area and may not be allowed by all websites.
+To put it in other words: __Use this app at your own risk__ and for personal use only.
+
 # Wind forecast
 An app that scrapes wind forecasts from a few websites for personal use.
 I decided to start building it because I don't want to check 4 different apps/websites to see the wind forecast.
