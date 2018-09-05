@@ -16,7 +16,7 @@ var options = {
   exportWindguruData: false,         // Export all gathered windguru data
   windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',
   windguruUrl: 'https://www.windguru.cz/46940',
-  saveIncoming: false                // Saves ip's from incoming connections
+  saveIncoming: false                // Saves ip's from incoming connections. May be inaccurate as it's easy to spoof
 }
 
 var lastScrape = 6 // Set default at 6 in the morning
@@ -40,7 +40,7 @@ function index(req, res) {
   }
 
   // Save incoming connection ip's
-  if(saveIncoming == true) {
+  if(options.saveIncoming == true) {
     fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip, function(err) {
       if(err) throw err
     })

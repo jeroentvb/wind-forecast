@@ -4,6 +4,8 @@ body {
   transition: .5s;
   color: #ffffff;
   background-color: #444;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .light-mode {
