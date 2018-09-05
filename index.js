@@ -27,7 +27,7 @@ module.exports = express()
   .use(express.static('static'))
   .get('/', index)
   .use(notFound)
-  .listen(options.port, () => console.log(`Server listening on port ${options.port}...`))
+  .listen(options.port, () => console.log(chalk.green(`Server listening on port ${options.port}...`)))
 
 function index(req, res) {
   // Throw error if the links aren't specified
@@ -41,7 +41,7 @@ function index(req, res) {
 
   // Save incoming connection ip's
   if(options.saveIncoming == true) {
-    fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip, function(err) {
+    fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip + '\n', function(err) {
       if(err) throw err
     })
   }
