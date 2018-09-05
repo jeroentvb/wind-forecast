@@ -1,14 +1,14 @@
 <%- include('head', {page: page}) %>
 
 <h1>Wind forecasts</h1>
+<button type="button" name="switch-light-dark" id="switch-light-dark">Night mode</button>
 
 <h2>Spot: <%= windfinder.spot %></h2>
-<!--h3>Date: <%= windfinder.date[0] %></h3>-->
 <h4>Windfinder</h4>
 <table>
   <thead>
     <tr>
-      <th>Date</th>
+      <th class="model-name">gfs</th>
     </tr>
   </thead>
   <tbody>
@@ -44,17 +44,14 @@
   <table>
     <thead>
       <tr>
-        <th><%= model %></th>
-      </tr>
-      <tr>
-        <th>Date</th>
+        <th class="model-name"><%= model %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th>Local time</th>
         <% for(let i=0; i < windguru[model].time.length; i++) { %>
-          <td><%= windguru[model].time[i] %></td>
+            <td><%= windguru[model].time[i] %></td>
         <% } %>
       </tr>
       <tr>
@@ -80,10 +77,10 @@
 <% } %>
 
 <%- renderWindguru('harmonie') %>
-<%- renderWindguru('icon7') %>
 <%- renderWindguru('cosmo') %>
+<%- renderWindguru('icon7') %>
 <%- renderWindguru('icon13') %>
-<%- renderWindguru('gsf') %>
+<%- renderWindguru('gfs') %>
 <%- renderWindguru('wrf') %>
 
 

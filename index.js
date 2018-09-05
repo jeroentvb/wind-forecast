@@ -19,7 +19,7 @@ module.exports = express()
   .use(notFound)
   .listen(port, () => console.log(`Server listening on port ${port}...`))
 
-var useOfflineData = false
+var useOfflineData = true
 
 function index(req, res) {
   windfinderUrl = 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout'
@@ -70,21 +70,28 @@ function index(req, res) {
           windfinder.date[i] = $(this).text()
         })
 
+        // Get the time
+        $('.data-time').find($('.value')).filter(function(i) {
+          // console.log($(this).text())
+          windfinder.time[i] = $(this).text()
+        })
+        spliceToDayHours(windfinder.time)
+
         // Get the average wind speed
         $('.data--major').find($('.units-ws')).filter(function(i) {
           windfinder.windspeed[i] = $(this).text()
         })
-        spliceToFirstDay(windfinder.windspeed)
+        spliceToDayHours(windfinder.windspeed)
 
         // Get the wind gusts
         $('.data-gusts').find($('.units-ws')).filter(function(i) {
           windfinder.windgust[i] = $(this).text()
         })
-        spliceToFirstDay(windfinder.windgust)
+        spliceToDayHours(windfinder.windgust)
 
         // Get the wind direction; do some converting
         $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
-          var data = new Number($(this).attr('title').replace('°', ' ')) - 180
+          var data = parseInt($(this).attr('title').replace('°', ' ')) - 180
 
           // This can be used to calculate the wind direction in wind direction instead of angles
           // var val = Math.floor((data / 22.5) + 0.5)
@@ -93,13 +100,10 @@ function index(req, res) {
 
           windfinder.winddirection[i] = data
         })
-        spliceToFirstDay(windfinder.winddirection)
+        spliceToDayHours(windfinder.winddirection)
 
-        for (let i=0; i < windfinder.winddirection.length; i++) {
-          windfinder.time[i] = i + 7 + 'h'
-        }
         // Export the windfinder data to a file
-        // exportData(windfinder, 'windfinder')
+        exportData(windfinder, 'windfinder')
       }
 
       windfinder.done = true
@@ -135,7 +139,7 @@ function index(req, res) {
         windgust: new Array,
         winddirection: new Array
       },
-      gsf: {
+      gfs: {
         time: new Array,
         windspeed: new Array,
         windgust: new Array,
@@ -166,13 +170,20 @@ function index(req, res) {
           windguru.spot = $(this).text()
         })
         // Harmonie weather model
-        windguruModel('harmonie', '2', $, windguru, 15, 60)
-        windguruModel('icon7', '4', $, windguru, 12, 60)
-        windguruModel('cosmo', '1', $, windguru, 9, 60)
-        windguruModel('icon13', '6', $, windguru, 5, 60)
-        windguruModel('gsf', '0', $, windguru, 5, 60)
-        windguruModel('wrf', '3', $, windguru, 15, 60)
+        // windguruModel('harmonie', '2', $, windguru, 15, 60)
+        // windguruModel('icon7', '4', $, windguru, 12, 60)
+        // windguruModel('cosmo', '1', $, windguru, 9, 60)
+        // windguruModel('icon13', '6', $, windguru, 5, 60)
+        // windguruModel('gfs', '0', $, windguru, 5, 60)
+        // windguruModel('wrf', '3', $, windguru, 15, 60)
 
+        windguruModel('harmonie', '2', $, windguru)
+        windguruModel('icon7', '4', $, windguru)
+        windguruModel('cosmo', '1', $, windguru)
+        windguruModel('icon13', '6', $, windguru)
+        windguruModel('gfs', '0', $, windguru)
+        windguruModel('wrf', '3', $, windguru)
+        // console.log(windguru)
         // Export the windguru data
         // exportData(windguru, 'windguru')
 
@@ -194,25 +205,25 @@ function index(req, res) {
 // sliceEnd = stop removing items from the array
 function windguruModel(model, number, $, windguru, spliceStart, spliceEnd) {
   // Get time
-  $(`#tabid_${number}_0_dates`).find('.day1').filter(function(i) {
-    windguru[model].time[i] = $(this).text().slice(5, 7) + 'h'
+  $(`#tabid_${number}_0_dates`).find('td').filter(function(i) {
+    windguru[model].time[i] = $(this).text().split('.')[1]
   })
-  windguru[model].time.splice(spliceStart, spliceEnd)
+  // windguru[model].time.splice(0, 7)
   // Get windspeed
-  $(`#tabid_${number}_0_WINDSPD`).find('.wgfcst-clickable').filter(function(i) {
-    windguru[model].windspeed[i] = $(this).text()
+  $(`#tabid_${number}_0_WINDSPD`).find('td').filter(function(i) {
+      windguru[model].windspeed[i] = $(this).text()
   })
-  windguru[model].windspeed.splice(spliceStart, spliceEnd)
+  // windguru[model].windspeed.splice(spliceStart, spliceEnd)
   // Get windgust
   $(`#tabid_${number}_0_GUST`).find('td').filter(function(i) {
     windguru[model].windgust[i] = $(this).text()
   })
-  windguru[model].windgust.splice(spliceStart, spliceEnd)
+  // windguru[model].windgust.splice(spliceStart, spliceEnd)
   // Get winddirection
   $(`#tabid_${number}_0_SMER`).find('td span').filter(function(i) {
-    windguru[model].winddirection[i] = new Number($(this).attr('title').match(/\d+/)[0]) - 180
+    windguru[model].winddirection[i] = parseInt($(this).attr('title').match(/\d+/)[0]) - 180
   })
-  windguru[model].winddirection.splice(spliceStart, spliceEnd)
+  // windguru[model].winddirection.splice(spliceStart, spliceEnd)
 }
 
 function index2(req, res) {
@@ -229,11 +240,15 @@ function render(res, windfinder, windguru) {
   })
 }
 
-function spliceToFirstDay(array) {
-  // Start at 7h
+function spliceToDayHours(array) {
+  // Remove the first 7 hours
   array.splice(0, 7)
-  // end at 21h
-  array.splice(15, 60)
+  // Remove the night between day 1 and 2
+  array.splice(16, 8)
+  // Remove the night between day 2 and 3
+  array.splice(32, 8)
+  // Remove last hour of day 3 (23h)
+  array.splice(48, 10)
 }
 
 function exportData(jsonObject, name) {
