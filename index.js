@@ -11,12 +11,14 @@ const fs = require('fs')
 // Various options for the app
 var options = {
   port: 3000,                       // Port for the server to listen on
-  useOfflineData: true,             // Use offline data or not (need to export all data first!)
-  exportWindfinderData: false,      // Export all gathered windfinder data
-  exportWindguruData: false,         // Export all gathered windguru data
+  useOfflineData: false,             // Use offline data or not (need to export all data first!)
+  exportWindfinderData: true,      // Export all gathered windfinder data
+  exportWindguruData: true,         // Export all gathered windguru data
   windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',
   windguruUrl: 'https://www.windguru.cz/46940'
 }
+
+var lastScrape = 6
 
 module.exports = express()
   .set('view engine', 'ejs')
@@ -36,7 +38,9 @@ function index(req, res) {
     throw chalk.red('The urls to get the data from aren\'t specified..')
   }
 
-  if (options.useOfflineData == true) {
+  var currentHour = new Date().getHours()
+
+  if(options.useOfflineData == true || (currentHour - lastScrape) < 1) {
     offlineData(res)
   } else {
     console.log(chalk.yellow('Live data is being used..'))
@@ -171,13 +175,6 @@ function index(req, res) {
           // console.log($(this).text())
           windguru.spot = $(this).text()
         })
-        // Harmonie weather model
-        // windguruModel('harmonie', '2', $, windguru, 15, 60)
-        // windguruModel('icon7', '4', $, windguru, 12, 60)
-        // windguruModel('cosmo', '1', $, windguru, 9, 60)
-        // windguruModel('icon13', '6', $, windguru, 5, 60)
-        // windguruModel('gfs', '0', $, windguru, 5, 60)
-        // windguruModel('wrf', '3', $, windguru, 15, 60)
 
         windguruModel('harmonie', '2', $, windguru)
         windguruModel('icon7', '4', $, windguru)
@@ -194,7 +191,7 @@ function index(req, res) {
 
         windguru.done = true
 
-        render(res, windfinder, windguru)
+        render(res, windfinder, windguru, currentHour)
       })
       .catch(error => console.log(error))
 
@@ -231,13 +228,8 @@ function windguruModel(model, number, $, windguru, spliceStart, spliceEnd) {
   // windguru[model].winddirection.splice(spliceStart, spliceEnd)
 }
 
-function index2(req, res) {
-  var spot = ''
-  var dates = new Array
-
-}
-
-function render(res, windfinder, windguru) {
+function render(res, windfinder, windguru, scrapeTime) {
+  lastScrape = scrapeTime
   res.render('index', {
     page: 'home',
     windfinder: windfinder,
@@ -264,6 +256,7 @@ function exportData(jsonObject, name) {
       console.log(chalk.yellow('File written'))
     }
   })
+  return
 }
 
 function offlineData(res) {
