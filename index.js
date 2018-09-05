@@ -47,7 +47,6 @@ function index(req, res) {
 
     var windfinder = {
       name: 'Windfinder',
-      done: false,
       spot: '',
       date: new Array,
       time: new Array,
@@ -118,7 +117,6 @@ function index(req, res) {
 
     var windguru = {
       name: 'WindGuru',
-      done: false,
       spot: '',
       date: new Array,
       harmonie: {

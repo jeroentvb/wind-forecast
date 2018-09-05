@@ -4,7 +4,7 @@
   "description": "An app to gather wind forecast data from different services",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
