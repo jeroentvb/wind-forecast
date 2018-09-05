@@ -1,16 +1,24 @@
 body {
   font-family: sans-serif;
-  margin: 1em; }
+  margin: 1em;
+  transition: .5s; }
+
+.dark-mode {
+  background-color: #444 !important;
+  color: #fff !important; }
 
 table {
   border: 1px solid black; }
-
-td, th {
-  padding: 6px 12px; }
-  td:not(:first-child), th:not(:first-child) {
-    text-align: center; }
-
-th {
-  text-align: left; }
+  table td, table th {
+    padding: 6px 6px; }
+    table td:not(:first-child), table th:not(:first-child) {
+      text-align: center;
+      min-width: 30px; }
+    table td:first-child, table th:first-child {
+      min-width: 200px; }
+  table th {
+    text-align: left; }
+  table .model-name {
+    text-transform: uppercase; }
 
 /*# sourceMappingURL=style.css.map */
