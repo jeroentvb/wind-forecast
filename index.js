@@ -11,14 +11,15 @@ const fs = require('fs')
 // Various options for the app
 var options = {
   port: 25560,                       // Port for the server to listen on
-  useOfflineData: true,             // Use offline data or not (need to export all data first!)
-  exportWindfinderData: true,      // Export all gathered windfinder data
-  exportWindguruData: true,         // Export all gathered windguru data
+  useOfflineData: false,             // Use offline data or not (need to export all data first!)
+  exportWindfinderData: false,      // Export all gathered windfinder data
+  exportWindguruData: false,         // Export all gathered windguru data
   windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',
-  windguruUrl: 'https://www.windguru.cz/46940'
+  windguruUrl: 'https://www.windguru.cz/46940',
+  saveIncoming: false                // Saves ip's from incoming connections
 }
 
-var lastScrape = 6
+var lastScrape = 6 // Set default at 6 in the morning
 
 module.exports = express()
   .set('view engine', 'ejs')
@@ -36,6 +37,13 @@ function index(req, res) {
       error: 'The urls to get the data from aren\'t specified..'
     })
     throw chalk.red('The urls to get the data from aren\'t specified..')
+  }
+
+  // Save incoming connection ip's
+  if(saveIncoming == true) {
+    fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip, function(err) {
+      if(err) throw err
+    })
   }
 
   var currentHour = new Date().getHours()
