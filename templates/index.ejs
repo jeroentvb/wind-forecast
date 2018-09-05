@@ -1,5 +1,34 @@
 <%- include('head', {page: page}) %>
 
+<% var colors = [
+  '', // 0
+  '#9600FE', // 1
+  '#6400FE',
+  '#6400FE',
+  '#3200FE',
+  '#3200FE', // 5
+  '#0032FE',
+  '#0032FE',
+  '#0064FE',
+  '#0064FE',
+  '#0096FE', // 10
+  '#0096FE',
+  '#00C8FE', // 12
+  '#00C8FE',
+  '#00E6F0',
+  '#00E6F0', // 15
+  '#25C192',
+  '#25C192',
+  '#11D411',
+  '#11D411',
+  '#00E600', // 20
+  '#00E600',
+  '#00FA00',
+  '#00FA00',
+  '#B8FF61',
+  '#B8FF61', // 25
+] %>
+
 <h1>Wind forecasts</h1>
 <button type="button" name="switch-light-dark" id="switch-light-dark">Night mode</button>
 
@@ -27,13 +56,13 @@
     <tr>
       <th>Average windspeed</th>
       <% for(let i=0; i < windfinder.windspeed.length; i++) { %>
-        <td><%= windfinder.windspeed[i] %></td>
+        <td style="background-color: <%= colors[windfinder.windspeed[i]] %>"><%= windfinder.windspeed[i] %></td>
       <% } %>
     </tr>
     <tr>
       <th>Wind gusts</th>
       <% for(let i=0; i < windfinder.windgust.length; i++) { %>
-        <td><%= windfinder.windgust[i] %></td>
+        <td style="background-color: <%= colors[windfinder.windgust[i]] %>"><%= windfinder.windgust[i] %></td>
       <% } %>
     </tr>
   </tbody>
@@ -63,13 +92,13 @@
       <tr>
         <th>Average windspeed</th>
         <% for(let i=0; i < windguru[model].windspeed.length; i++) { %>
-          <td><%= windguru[model].windspeed[i] %></td>
+          <td style="background-color: <%= colors[windguru[model].windspeed[i]] %>"><%= windguru[model].windspeed[i] %></td>
         <% } %>
       </tr>
       <tr>
         <th>Wind gusts</th>
         <% for(let i=0; i < windguru[model].windgust.length; i++) { %>
-          <td><%= windguru[model].windgust[i] %></td>
+          <td style="background-color: <%= colors[windguru[model].windgust[i]] %>"><%= windguru[model].windgust[i] %></td>
         <% } %>
       </tr>
     </tbody>
