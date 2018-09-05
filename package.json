@@ -18,7 +18,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "nightmare": "^3.0.1",
-    "nodemon": "^1.18.3",
-    "request": "^2.87.0"
+    "nodemon": "^1.18.4",
+    "request": "^2.88.0"
   }
 }
