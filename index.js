@@ -8,8 +8,13 @@ const nightmare = Nightmare({
 const chalk = require('chalk')
 const fs = require('fs')
 
-// port to listen on
-const port = 3000
+// Various options for the app
+var options = {
+  port: 3000,                       // Port for the server to listen on
+  useOfflineData: true,             // Use offline data or not (need to export all data first!)
+  exportWindfinderData: false,      // Export all gathered windfinder data
+  exportWindguruData: false         // Export all gathered windguru data
+}
 
 module.exports = express()
   .set('view engine', 'ejs')
@@ -17,9 +22,7 @@ module.exports = express()
   .use(express.static('static'))
   .get('/', index)
   .use(notFound)
-  .listen(port, () => console.log(`Server listening on port ${port}...`))
-
-var useOfflineData = true
+  .listen(options.port, () => console.log(`Server listening on port ${options.port}...`))
 
 function index(req, res) {
   windfinderUrl = 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout'
@@ -34,7 +37,7 @@ function index(req, res) {
     throw chalk.red('The urls to get the data from aren\'t specified..')
   }
 
-  if (useOfflineData == true) {
+  if (options.useOfflineData == true) {
     offlineData(res)
   } else {
     console.log(chalk.yellow('Live data is being used..'))
@@ -92,22 +95,22 @@ function index(req, res) {
         // Get the wind direction; do some converting
         $('.data-direction-arrow').find($('.directionarrow')).filter(function(i) {
           var data = parseInt($(this).attr('title').replace('°', ' ')) - 180
-
           // This can be used to calculate the wind direction in wind direction instead of angles
           // var val = Math.floor((data / 22.5) + 0.5)
           // var windDirections = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
           // windDirection[i] = windDirections[(val % 16)]
-
           windfinder.winddirection[i] = data
         })
         spliceToDayHours(windfinder.winddirection)
 
         // Export the windfinder data to a file
-        exportData(windfinder, 'windfinder')
+        if(options.exportWindfinderData == true) {
+          exportData(windfinder, 'windfinder')
+        }
       }
 
       windfinder.done = true
-
+      
     })
 
     var windguru = {
@@ -184,8 +187,11 @@ function index(req, res) {
         windguruModel('gfs', '0', $, windguru)
         windguruModel('wrf', '3', $, windguru)
         // console.log(windguru)
-        // Export the windguru data
-        // exportData(windguru, 'windguru')
+
+        if(options.exportWindguruData == true) {
+          // Export the windguru data
+          exportData(windguru, 'windguru')
+        }
 
         windguru.done = true
 
