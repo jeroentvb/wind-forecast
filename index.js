@@ -11,7 +11,7 @@ const fs = require('fs')
 // Various options for the app
 var options = {
   port: 25560,                       // Port for the server to listen on
-  useOfflineData: false,             // Use offline data or not (need to export all data first!)
+  useOfflineData: true,             // Use offline data or not (need to export all data first!)
   exportWindfinderData: true,      // Export all gathered windfinder data
   exportWindguruData: true,         // Export all gathered windguru data
   windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',

@@ -59,7 +59,7 @@ text: [
 ]}%>
 
 <h1>Wind forecasts</h1>
-<button type="button" name="switch-light-dark" id="switch-light-dark">Night mode</button>
+<button type="button" name="switch-light-dark" id="switch-light-dark">Dark mode</button>
 
 <h2>Spot: <%= windfinder.spot %></h2>
 <h4>Windfinder</h4>
@@ -79,7 +79,7 @@ text: [
     <tr>
       <th>Winddirection</tdh>
         <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
-          <td><img src="img/arrow.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] %>deg)"></td>
+          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] %>deg)"></td>
         <% } %>
     </tr>
     <tr>
@@ -115,7 +115,7 @@ text: [
       <tr>
         <th>Winddirection</tdh>
           <% for(let i=0; i < windguru[model].winddirection.length; i++) { %>
-            <td><img src="img/arrow.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windguru[model].winddirection[i] %>deg)"></td>
+            <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windguru[model].winddirection[i] %>deg)"></td>
           <% } %>
       </tr>
       <tr>

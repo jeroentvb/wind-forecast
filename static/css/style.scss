@@ -2,11 +2,13 @@ body {
   font-family: sans-serif;
   margin: 1em;
   transition: .5s;
+  color: #ffffff;
+  background-color: #444;
 }
 
-.dark-mode {
-  background-color: #444 !important;
-  color: #ffffff !important;
+.light-mode {
+  background-color: inherit !important;
+  color: inherit !important;
 }
 #switch-light-dark {
   font-size: 1em;
@@ -14,21 +16,22 @@ body {
   background: none;
   padding: 8px 16px;
   border-radius: 2px;
-  border: 1px solid black;
+  border: 1px solid #ffffff;
   transition: .5s;
+  color: #ffffff;
   &:focus {
     outline: none;
   }
   &:hover {
     cursor: pointer;
-    background-color: #d9d9d9;
+    background-color: #737373;
   }
 }
 .dark-button {
-  color: #ffffff !important;
-  border-color: #ffffff !important;
+  color: inherit !important;
+  border-color: inherit !important;
   &:hover {
-    background-color: #737373 !important;
+    background-color: #d9d9d9 !important;
   }
 }
 table {
