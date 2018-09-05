@@ -13,7 +13,9 @@ var options = {
   port: 3000,                       // Port for the server to listen on
   useOfflineData: true,             // Use offline data or not (need to export all data first!)
   exportWindfinderData: false,      // Export all gathered windfinder data
-  exportWindguruData: false         // Export all gathered windguru data
+  exportWindguruData: false,         // Export all gathered windguru data
+  windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',
+  windguruUrl: 'https://www.windguru.cz/46940'
 }
 
 module.exports = express()
@@ -25,11 +27,8 @@ module.exports = express()
   .listen(options.port, () => console.log(`Server listening on port ${options.port}...`))
 
 function index(req, res) {
-  windfinderUrl = 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout'
-  windguruUrl = 'https://www.windguru.cz/46940'
-
   // Throw error if the links aren't specified
-  if(windfinderUrl.length < 22 || windguruUrl.length < 19) {
+  if(options.windfinderUrl.length < 22 || options.windguruUrl.length < 19) {
     res.render('error', {
       page: 'Error',
       error: 'The urls to get the data from aren\'t specified..'
@@ -53,7 +52,7 @@ function index(req, res) {
       winddirection: new Array
     }
 
-    request(windfinderUrl, function(error, response, html) {
+    request(options.windfinderUrl, function(error, response, html) {
       if(error) {
         res.render('error', {
           page: 'error',
@@ -110,7 +109,7 @@ function index(req, res) {
       }
 
       windfinder.done = true
-      
+
     })
 
     var windguru = {
@@ -157,7 +156,7 @@ function index(req, res) {
     }
 
     nightmare
-      .goto(windguruUrl)
+      .goto(options.windguruUrl)
       .wait('.spot-name')
       .wait('#tabid_2_0_dates')
       .wait('#tabid_2_0_WINDSPD')
