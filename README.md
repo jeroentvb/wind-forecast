@@ -26,3 +26,9 @@ Open `localhost:3000` in your browser to view the forecast for today.
 
 ### Options
 Various options are located in the options object, located on line 12 of [index.js](/index.js)
+
+## Things for the future
+1. Improve the way forecasts are shown
+2. Add windy.com data
+3. Add average forecasted windspeed
+4. Add support for different spots/user input spots
