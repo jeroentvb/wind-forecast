@@ -1,7 +1,7 @@
-## Please note
+## Disclaimer
 This app scrapes data from other websites.
 Scraping websites is a grey area and may not be allowed by all websites.
-To put it in other words: __Use this app at your own risk__ and for personal use only.
+To put it in other words: __Use this app at your own risk__ and for personal use only.  
 
 The app has only been tested on node v9.5.0.
 
