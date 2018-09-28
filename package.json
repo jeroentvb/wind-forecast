@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/jeroentvb/wind-forecast.git"
   },
-  "author": "Jeroen",
+  "author": "jeroentvb",
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.1",
