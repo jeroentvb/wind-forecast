@@ -35,6 +35,12 @@
   '#FEC800', // 30
   '#FEC800',
   '#FEAE00',
+  '#FEAE00',
+  '#FE9600',
+  '#FE9600', // 35
+  '#E67D00',
+  '#E67D00',
+  '#E66400'
 ],
 text: [
   '', // 0
@@ -69,6 +75,12 @@ text: [
   '#000000',
   '#000000', // 30
   '#000000',
+  '#000000',
+  '#000000',
+  '#000000',
+  '#000000', // 35
+  '#000000',
+  '#000000',
   '#000000'
 ]}%>
 
@@ -91,7 +103,7 @@ text: [
       <% } %>
     </tr>
     <tr>
-      <th>Winddirection</tdh>
+      <th>Winddirection</th>
         <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
           <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] %>deg)"></td>
         <% } %>
@@ -127,7 +139,7 @@ text: [
         <% } %>
       </tr>
       <tr>
-        <th>Winddirection</tdh>
+        <th>Winddirection</th>
           <% for(let i=0; i < windguru[model].winddirection.length; i++) { %>
             <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windguru[model].winddirection[i] %>deg)"></td>
           <% } %>
@@ -147,13 +159,5 @@ text: [
     </tbody>
   </table>
 <% } %>
-
-<%- renderWindguru('harmonie') %>
-<%- renderWindguru('cosmo') %>
-<%- renderWindguru('icon7') %>
-<%- renderWindguru('icon13') %>
-<%- renderWindguru('gfs') %>
-<%- renderWindguru('wrf') %>
-
 
 <% include tail %>

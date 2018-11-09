@@ -30,7 +30,81 @@ module.exports = express()
   .use(notFound)
   .listen(options.port, () => console.log(chalk.green(`Server listening on port ${options.port}...`)))
 
+function getHtml (url) {
+  return new Promise((resolve, reject) => {
+    request(url, (err, res, html) => {
+      if (err) reject(err)
+      resolve(html)
+    })
+  })
+}
+
+function extractWindfinderData (html) {
+  let $ = cheerio.load(html)
+  let windfinder = {
+    name: 'Windfinder',
+    spot: '',
+    date: [],
+    time: [],
+    windspeed: [],
+    windgust: [],
+    winddirection: []
+  }
+
+  // Get the spots name
+  $('#spotheader-spotname').filter(function () {
+    windfinder.spot = $(this).text()
+  })
+
+  // Get the dates
+  $('.weathertable__header').find($('h4')).filter(function (i) {
+    windfinder.date[i] = $(this).text()
+  })
+
+  // Get the time
+  $('.data-time').find($('.value')).filter(function (i) {
+    // console.log($(this).text())
+    windfinder.time[i] = $(this).text()
+  })
+  helper.spliceToDayHours(windfinder.time)
+
+  // Get the average wind speed
+  $('.data--major').find($('.units-ws')).filter(function (i) {
+    windfinder.windspeed[i] = $(this).text()
+  })
+  helper.spliceToDayHours(windfinder.windspeed)
+
+  // Get the wind gusts
+  $('.data-gusts').find($('.units-ws')).filter(function (i) {
+    windfinder.windgust[i] = $(this).text()
+  })
+  helper.spliceToDayHours(windfinder.windgust)
+
+  // Get the wind direction; do some converting
+  $('.data-direction-arrow').find($('.directionarrow')).filter(function (i) {
+    var data = parseInt($(this).attr('title').replace('°', ' ')) - 180
+    // This can be used to calculate the wind direction in wind direction instead of angles
+    // var val = Math.floor((data / 22.5) + 0.5)
+    // var windDirections = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+    // windDirection[i] = windDirections[(val % 16)]
+    windfinder.winddirection[i] = data
+  })
+  helper.spliceToDayHours(windfinder.winddirection)
+
+  return windfinder
+}
+
 function index (req, res) {
+  getHtml(options.windfinderUrl)
+    .then(html => extractWindfinderData(html))
+    .then(windfinder => res.render('index', {
+      page: 'index',
+      windfinder: windfinder
+    })) // Windfinder data object
+    .catch(err => console.log(err))
+}
+
+function indexOld (req, res) {
   // Throw error if the links aren't specified
   if (options.windfinderUrl.length < 22 || options.windguruUrl.length < 19) {
     res.render('error', {
