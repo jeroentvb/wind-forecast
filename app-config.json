@@ -1,6 +1,6 @@
 {
   "port": 25560,
-  "useOfflineData": true,
+  "useOfflineData": false,
   "windfinderUrl": "https://www.windfinder.com/weatherforecast/markermeer_schellinkhout",
   "windguruUrl": "https://www.windguru.cz/46940",
   "windguru": [

@@ -2,7 +2,7 @@ const request = require('request')
 const cheerio = require('cheerio')
 const Nightmare = require('nightmare')
 const nightmare = Nightmare({
-  show: true
+  show: false
 })
 const helper = require('./helper')
 const config = require('../app-config.json')
