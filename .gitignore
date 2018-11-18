@@ -60,6 +60,10 @@ typings/
 # next.js build output
 .next
 
+# Sass
+.sass-cache/
+*.css.map
+
 # project related excludes
 *-offline-data.json
 acceslog.txt

@@ -105,7 +105,7 @@ function indexOld (req, res) {
   }
 
   // Save incoming connection ip's
-  if (config.saveIncoming === true) {
+  if (config.saveIncomingIp === true) {
     fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip + '\n', err => console.log(err))
   }
 

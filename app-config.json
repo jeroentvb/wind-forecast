@@ -5,5 +5,5 @@
   "exportWindguruData": true,
   "windfinderUrl": "https://www.windfinder.com/weatherforecast/markermeer_schellinkhout",
   "windguruUrl": "https://www.windguru.cz/46940",
-  "saveIncoming": false
+  "saveIncomingIp": false
 }
