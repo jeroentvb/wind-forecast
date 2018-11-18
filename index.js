@@ -8,17 +8,7 @@ const nightmare = Nightmare({
 const chalk = require('chalk')
 const fs = require('fs')
 const helper = require('./modules/helper')
-
-// Various options for the app
-var options = {
-  port: 25560, // Port for the server to listen on
-  useOfflineData: false, // For development, use offline data (need to export all data first!)
-  exportWindfinderData: true, // Export all gathered windfinder data
-  exportWindguruData: true, // Export all gathered windguru data
-  windfinderUrl: 'https://www.windfinder.com/weatherforecast/markermeer_schellinkhout',
-  windguruUrl: 'https://www.windguru.cz/46940',
-  saveIncoming: false // Saves ip's from incoming connections. May be inaccurate as it's easy to spoof
-}
+const config = require('./app-config.json')
 
 var lastScrape = 6 // Set default at 6 in the morning
 
@@ -28,7 +18,7 @@ module.exports = express()
   .use(express.static('static'))
   .get('/', index)
   .use(notFound)
-  .listen(options.port, () => console.log(chalk.green(`Server listening on port ${options.port}...`)))
+  .listen(config.port, () => console.log(chalk.green(`Server listening on port ${config.port}...`)))
 
 function getHtml (url) {
   return new Promise((resolve, reject) => {
@@ -95,7 +85,7 @@ function extractWindfinderData (html) {
 }
 
 function index (req, res) {
-  getHtml(options.windfinderUrl)
+  getHtml(config.windfinderUrl)
     .then(html => extractWindfinderData(html))
     .then(windfinder => res.render('index', {
       page: 'index',
@@ -106,7 +96,7 @@ function index (req, res) {
 
 function indexOld (req, res) {
   // Throw error if the links aren't specified
-  if (options.windfinderUrl.length < 22 || options.windguruUrl.length < 19) {
+  if (config.windfinderUrl.length < 22 || config.windguruUrl.length < 19) {
     res.render('error', {
       page: 'Error',
       error: 'The urls to get the data from aren\'t specified..'
@@ -115,13 +105,13 @@ function indexOld (req, res) {
   }
 
   // Save incoming connection ip's
-  if (options.saveIncoming === true) {
+  if (config.saveIncoming === true) {
     fs.appendFile('acceslog.txt', new Date() + ' ' + req.ip + '\n', err => console.log(err))
   }
 
   var currentHour = new Date().getHours()
 
-  if (options.useOfflineData === true || (currentHour - lastScrape) < 1) {
+  if (config.useOfflineData === true || (currentHour - lastScrape) < 1) {
     offlineData(res)
   } else {
     console.log(chalk.yellow('Live data is being used..'))
@@ -136,7 +126,7 @@ function indexOld (req, res) {
       winddirection: []
     }
 
-    request(options.windfinderUrl, function (error, response, html) {
+    request(config.windfinderUrl, function (error, response, html) {
       if (error) {
         res.render('error', {
           page: 'error',
@@ -187,7 +177,7 @@ function indexOld (req, res) {
         helper.spliceToDayHours(windfinder.winddirection)
 
         // Export the windfinder data to a file
-        if (options.exportWindfinderData === true) {
+        if (config.exportWindfinderData === true) {
           helper.exportData(windfinder, 'windfinder')
         }
       }
@@ -238,7 +228,7 @@ function indexOld (req, res) {
     }
 
     nightmare
-      .goto(options.windguruUrl)
+      .goto(config.windguruUrl)
       .wait('.spot-name')
       .wait('#tabid_2_0_dates')
       .wait('#tabid_2_0_WINDSPD')
@@ -262,7 +252,7 @@ function indexOld (req, res) {
         windguruModel('wrf', '3', $, windguru)
         // console.log(windguru)
 
-        if (options.exportWindguruData === true) {
+        if (config.exportWindguruData === true) {
           // Export the windguru data
           helper.exportData(windguru, 'windguru')
         }
