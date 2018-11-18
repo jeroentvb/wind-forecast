@@ -38,6 +38,7 @@ body {
 }
 table {
   border: 1px solid black;
+  margin-bottom: 16px;
   td, th {
     padding: 6px 6px;
     &:not(:first-child) {

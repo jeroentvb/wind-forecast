@@ -33,7 +33,8 @@ body {
     background-color: #d9d9d9 !important; }
 
 table {
-  border: 1px solid black; }
+  border: 1px solid black;
+  margin-bottom: 16px; }
   table td, table th {
     padding: 6px 6px; }
     table td:not(:first-child), table th:not(:first-child) {
