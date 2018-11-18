@@ -14,7 +14,7 @@
   '#0064FE',
   '#0096FE', // 10
   '#0096FE',
-  '#00C8FE', // 12
+  '#00C8FE',
   '#00C8FE',
   '#00E6F0',
   '#00E6F0', // 15
@@ -40,7 +40,12 @@
   '#FE9600', // 35
   '#E67D00',
   '#E67D00',
-  '#E66400'
+  '#E66400',
+  '#E66400',
+  '#DC4A1D', // 40
+  '#DC4A1D',
+  '#C8321D',
+  '#C8321D'
 ],
 text: [
   '', // 0
@@ -55,7 +60,7 @@ text: [
   '#ffffff',
   '#ffffff', // 10
   '#ffffff',
-  '#000000', // 12
+  '#000000',
   '#000000',
   '#000000',
   '#000000', // 15
@@ -79,6 +84,12 @@ text: [
   '#000000',
   '#000000',
   '#000000', // 35
+  '#000000',
+  '#000000',
+  '#000000',
+  '#000000',
+  '#000000', // 40
+  '#000000',
   '#000000',
   '#000000',
   '#000000'
@@ -128,36 +139,38 @@ text: [
   <table>
     <thead>
       <tr>
-        <th class="model-name"><%= model %></th>
+        <th class="model-name"><%= model.name %></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <th>Local time</th>
-        <% for(let i=0; i < windguru[model].time.length; i++) { %>
-            <td><%= windguru[model].time[i] %></td>
-        <% } %>
+        <% model.time.forEach(hour => { %>
+          <td><%= hour %></td>
+        <% }) %>
       </tr>
       <tr>
         <th>Winddirection</th>
-          <% for(let i=0; i < windguru[model].winddirection.length; i++) { %>
-            <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windguru[model].winddirection[i] %>deg)"></td>
-          <% } %>
+        <% model.winddirection.forEach(winddirection => { %>
+          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= winddirection %>deg)"></td>
+        <% }) %>
       </tr>
       <tr>
         <th>Average windspeed</th>
-        <% for(let i=0; i < windguru[model].windspeed.length; i++) { %>
-          <td style="background-color: <%= colors.background[windguru[model].windspeed[i]] %>; color: <%= colors.text[windguru[model].windspeed[i]] %>"><%= windguru[model].windspeed[i] %></td>
-        <% } %>
+        <% model.windspeed.forEach(speed => { %>
+          <td style="background-color: <%= colors.background[speed] %>; color: <%= colors.text[speed] %>"><%= speed %></td>
+        <% }) %>
       </tr>
       <tr>
         <th>Wind gusts</th>
-        <% for(let i=0; i < windguru[model].windgust.length; i++) { %>
-          <td style="background-color: <%= colors.background[windguru[model].windgust[i]] %>; color:<%= colors.text[windguru[model].windgust[i]] %>"><%= windguru[model].windgust[i] %></td>
-        <% } %>
+        <% model.windgust.forEach(gust => { %>
+          <td style="background-color: <%= colors.background[gust] %>; color:<%= colors.text[gust] %>"><%= gust %></td>
+        <% }) %>
       </tr>
     </tbody>
   </table>
 <% } %>
+
+<% windguru.models.forEach(model => renderWindguru(model)) %>
 
 <% include tail %>

@@ -9,7 +9,7 @@ function spliceToDayHours (array) {
   array.splice(48, 10)
 }
 
-function exportData (obj, name) {
+function exportObj (obj, name) {
   const fs = require('fs')
   const chalk = require('chalk')
   fs.writeFile(name + '-offline-data.json', JSON.stringify(obj, null, 4), err => {
@@ -18,7 +18,17 @@ function exportData (obj, name) {
   })
 }
 
+function exportArr (name, arr) {
+  let fs = require('fs')
+  let data = JSON.stringify(arr, null, 4)
+  fs.writeFile(name + '-export.json', data, err => {
+    if (err) throw err
+    console.log(`${name}-export.json written`)
+  })
+}
+
 module.exports = {
   spliceToDayHours,
-  exportData
+  exportObj,
+  exportArr
 }

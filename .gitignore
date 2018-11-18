@@ -66,4 +66,5 @@ typings/
 
 # project related excludes
 *-offline-data.json
+*-export.json
 acceslog.txt
