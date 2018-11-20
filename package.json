@@ -17,11 +17,14 @@
     "cheerio": "^1.0.0-rc.2",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "jeroentvb-helper": "github:jeroentvb/jeroentvb-helper",
     "nightmare": "^3.0.1",
     "nodemon": "^1.18.6",
     "request": "^2.88.0"
   },
   "nodemonConfig": {
-    "ignore": ["offline-data-export.json"]
+    "ignore": [
+      "offline-data-export.json"
+    ]
   }
 }

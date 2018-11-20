@@ -1,7 +1,7 @@
 const express = require('express')
 const chalk = require('chalk')
 const scrape = require('./modules/scrape')
-const helper = require('./modules/helper')
+const Helper = require('jeroentvb-helper')
 const config = require('./app-config.json')
 
 var lastScrape = 5 // Set default at 5 in the morning
@@ -31,7 +31,7 @@ function useLiveData (res) {
     scrape.windguru()
   ])
     .then(data => {
-      helper.exportArr('offline-data', data)
+      Helper.exportToFile('offline-data', data)
       res.render('index', {
         page: 'Wind forecast',
         windfinder: data[0],
