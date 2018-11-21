@@ -3,7 +3,7 @@
   "useOfflineData": false,
   "windfinderUrl": "https://www.windfinder.com/weatherforecast/markermeer_schellinkhout",
   "windguruUrl": "https://www.windguru.cz/46940",
-  "windguru": [
+  "windguruModels": [
     2,
     1,
     4,

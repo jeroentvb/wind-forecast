@@ -33,7 +33,7 @@ git clone https://github.com/jeroentvb/wind-forecast.git
 npm install
 ```
 
-Add the windfinder & windguru links for your local spot in [app-config.json](app-config.json). You also need to fill the `windguru` array with the numbers of the windmodels you want to scrape and display. You can find these numbers on the windguru page for your spot. Use the dev tools of your browser to inspect the source and look for `id="tabid_1_0_WINDSPD"`. In this example *1* would be the number you are looking for.
+Add the windfinder & windguru links for your local spot in [app-config.json](app-config.json). You also need to fill the `windguruModels` array with the numbers of the windmodels you want to scrape and display. You can find these numbers on the windguru page for your spot. Use the dev tools of your browser to inspect the source and look for `id="tabid_1_0_WINDSPD"`. In this example *1* would be the number you are looking for.
 
 Start the server using `npm start` or `node index.js`. It will run on the port specified in [app-config.json](app-config.json).
 
