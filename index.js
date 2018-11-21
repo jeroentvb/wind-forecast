@@ -1,6 +1,6 @@
 const express = require('express')
 const chalk = require('chalk')
-const scrape = require('./modules/scrape')
+const Scrape = require('wind-scrape')
 const Helper = require('jeroentvb-helper')
 const config = require('./app-config.json')
 
@@ -27,8 +27,8 @@ function index (req, res) {
 function useLiveData (res) {
   console.log('Using live data')
   Promise.all([
-    scrape.windfinder(),
-    scrape.windguru()
+    Scrape.windfinder(config.windfinderUrl),
+    Scrape.windguru(config.windguruUrl, config.windguruModels)
   ])
     .then(data => {
       Helper.exportToFile('offline-data', data)
