@@ -116,7 +116,7 @@ text: [
     <tr>
       <th>Winddirection</th>
         <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
-          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] %>deg)"></td>
+          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] - 180 %>deg)"></td>
         <% } %>
     </tr>
     <tr>
