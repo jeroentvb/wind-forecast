@@ -1,6 +1,6 @@
 const express = require('express')
 const chalk = require('chalk')
-const Scrape = require('wind-scrape')
+const scrape = require('wind-scrape')
 const Helper = require('jeroentvb-helper')
 const config = require('./app-config.json')
 
@@ -27,15 +27,17 @@ function index (req, res) {
 function useLiveData (res) {
   console.log('Using live data')
   Promise.all([
-    Scrape.windfinder(config.windfinderUrl),
-    Scrape.windguru(config.windguruUrl, config.windguruModels)
+    scrape.windfinder(config.windfinderSpotName),
+    scrape.windguru(config.windguruSpotNumber, config.windguruModels),
+    scrape.windy(config.windy.lang, config.windy.long)
   ])
     .then(data => {
       Helper.exportToFile('offline-data', data)
       res.render('index', {
         page: 'Wind forecast',
         windfinder: data[0],
-        windguru: data[1]
+        windguru: data[1],
+        windy: data[2]
       })
     })
     .catch(err => console.error(err))
@@ -47,7 +49,8 @@ function useOfflineData (res) {
   res.render('index', {
     page: 'Wind forecast',
     windfinder: offlineData[0],
-    windguru: offlineData[1]
+    windguru: offlineData[1],
+    windy: offlineData[2]
   })
 }
 

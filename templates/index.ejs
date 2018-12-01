@@ -135,7 +135,7 @@ text: [
 </table>
 
 <h4>Windguru</h4>
-<% function renderWindguru(model) { %>
+<% function renderWindguru (model) { %>
   <table>
     <thead>
       <tr>
@@ -172,5 +172,44 @@ text: [
 <% } %>
 
 <% windguru.models.forEach(model => renderWindguru(model)) %>
+
+<h4>Windy</h4>
+<% function renderWindy (model) { %>
+  <table>
+    <thead>
+      <tr>
+        <th class="model-name"><%= model.name %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Local time</th>
+        <% model.time.forEach(hour => { %>
+          <td><%= hour %></td>
+        <% }) %>
+      </tr>
+      <tr>
+        <th>Winddirection</th>
+        <% model.winddirection.forEach(winddirection => { %>
+          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= winddirection - 180 %>deg)"></td>
+        <% }) %>
+      </tr>
+      <tr>
+        <th>Average windspeed</th>
+        <% model.windspeed.forEach(speed => { %>
+          <td style="background-color: <%= colors.background[speed] %>; color: <%= colors.text[speed] %>"><%= speed %></td>
+        <% }) %>
+      </tr>
+      <tr>
+        <th>Wind gusts</th>
+        <% model.windgust.forEach(gust => { %>
+          <td style="background-color: <%= colors.background[gust] %>; color:<%= colors.text[gust] %>"><%= gust %></td>
+        <% }) %>
+      </tr>
+    </tbody>
+  </table>
+<% } %>
+
+<% windy.models.forEach(model => renderWindy(model)) %>
 
 <% include tail %>
