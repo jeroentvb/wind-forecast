@@ -110,7 +110,7 @@ text: [
     <tr>
       <th>Local time</th>
       <% for(let i=0; i < windfinder.time.length; i++) { %>
-        <td><%= windfinder.time[i] %></td>
+        <td><%= windfinder.time[i] %>h</td>
       <% } %>
     </tr>
     <tr>
@@ -146,7 +146,7 @@ text: [
       <tr>
         <th>Local time</th>
         <% model.time.forEach(hour => { %>
-          <td><%= hour %></td>
+          <td><%= hour %>h</td>
         <% }) %>
       </tr>
       <tr>
@@ -185,7 +185,7 @@ text: [
       <tr>
         <th>Local time</th>
         <% model.time.forEach(hour => { %>
-          <td><%= hour %></td>
+          <td><%= hour %>h</td>
         <% }) %>
       </tr>
       <tr>
