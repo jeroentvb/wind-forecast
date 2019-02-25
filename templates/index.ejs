@@ -1,52 +1,100 @@
 <%- include('head', {page: page}) %>
 
 <% var colors = {
-  background: [
-  '', // 0
-  '#9600FE', // 1
-  '#6400FE',
-  '#6400FE',
-  '#3200FE',
-  '#3200FE', // 5
-  '#0032FE',
-  '#0032FE',
-  '#0064FE',
-  '#0064FE',
-  '#0096FE', // 10
-  '#0096FE',
-  '#00C8FE',
-  '#00C8FE',
-  '#00E6F0',
-  '#00E6F0', // 15
-  '#25C192',
-  '#25C192',
-  '#11D411',
-  '#11D411',
-  '#00E600', // 20
-  '#00E600',
-  '#00FA00',
-  '#00FA00',
-  '#B8FF61',
-  '#B8FF61', // 25
-  '#FEFE00',
-  '#FEFE00',
-  '#FEE100',
-  '#FEE100',
-  '#FEC800', // 30
-  '#FEC800',
-  '#FEAE00',
-  '#FEAE00',
-  '#FE9600',
-  '#FE9600', // 35
-  '#E67D00',
-  '#E67D00',
-  '#E66400',
-  '#E66400',
-  '#DC4A1D', // 40
-  '#DC4A1D',
-  '#C8321D',
-  '#C8321D'
-],
+  background: {
+    windspeed: [
+    '', // 0
+    '#9600FE', // 1
+    '#6400FE',
+    '#6400FE',
+    '#3200FE',
+    '#3200FE', // 5
+    '#0032FE',
+    '#0032FE',
+    '#0064FE',
+    '#0064FE',
+    '#0096FE', // 10
+    '#0096FE',
+    '#00C8FE',
+    '#00C8FE',
+    '#00E6F0',
+    '#00E6F0', // 15
+    '#25C192',
+    '#25C192',
+    '#11D411',
+    '#11D411',
+    '#00E600', // 20
+    '#00E600',
+    '#00FA00',
+    '#00FA00',
+    '#B8FF61',
+    '#B8FF61', // 25
+    '#FEFE00',
+    '#FEFE00',
+    '#FEE100',
+    '#FEE100',
+    '#FEC800', // 30
+    '#FEC800',
+    '#FEAE00',
+    '#FEAE00',
+    '#FE9600',
+    '#FE9600', // 35
+    '#E67D00',
+    '#E67D00',
+    '#E66400',
+    '#E66400',
+    '#DC4A1D', // 40
+    '#DC4A1D',
+    '#C8321D',
+    '#C8321D'
+  ],
+    temperature: [
+    '#00e6f0', // 0
+    '#25c192', // 1
+    '#25c192',
+    '#11d411',
+    '#11d411',
+    '#00e600', // 5
+    '#00e600',
+    '#00fa00',
+    '#00fa00',
+    '#b8ff61',
+    '#b8ff61', // 10
+    '#fefe00',
+    '#fefe00',
+    '#fee100',
+    '#fee100',
+    '#fec800', // 15
+    '#fec800',
+    '#feae00',
+    '#feae00',
+    '#fe9600',
+    '#fe9600', // 20
+    '#e67d00',
+    '#e67d00',
+    '#00FA00',
+    '#B8FF61',
+    '#B8FF61', // 25
+    '#FEFE00',
+    '#FEFE00',
+    '#FEE100',
+    '#FEE100',
+    '#FEC800', // 30
+    '#FEC800',
+    '#FEAE00',
+    '#FEAE00',
+    '#FE9600',
+    '#FE9600', // 35
+    '#E67D00',
+    '#E67D00',
+    '#E66400',
+    '#E66400',
+    '#DC4A1D', // 40
+    '#DC4A1D',
+    '#C8321D',
+    '#C8321D'
+  ]
+},
 text: [
   '', // 0
   '#ffffff', // 1
@@ -95,121 +143,104 @@ text: [
   '#000000'
 ]}%>
 
+<% function legend (temp, modelName = 'GFS') { %>
+  <article class="legend">
+    <div class="heading row">
+      <%= modelName %>
+    </div>
+    <div class="row">
+      Local time
+    </div>
+    <div class="row">
+      Winddirection
+    </div>
+    <div class="row">
+      Average windspeed
+    </div>
+    <div class="row">
+      Wind gusts
+    </div>
+
+    <% if (temp) { %>
+      <div class="row">
+        Temperature
+      </div>
+    <% } %>
+  </article>
+<% } %>
+
+<% function renderDay (day, temp) { %>
+  <article class="forecast">
+    <div class="heading row">
+      <%= day.date %>
+    </div>
+
+    <div class="row">
+    <% day.hours.forEach(hour => { %>
+      <div class="unit"><%= hour.hour %>h</div>
+    <% }) %>
+    </div>
+
+    <div class="row">
+    <% day.hours.forEach(hour => { %>
+      <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
+    <% }) %>
+    </div>
+
+    <div class="row">
+    <% day.hours.forEach(hour => { %>
+      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
+    <% }) %>
+    </div>
+
+    <div class="row">
+    <% day.hours.forEach(hour => { %>
+      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
+    <% }) %>
+    </div>
+
+    <% if (temp) { %>
+      <div class="row">
+      <% day.hours.forEach(hour => { %>
+        <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: <%= colors.text[hour.temperature] %>"><%= hour.temperature %></div>
+      <% }) %>
+      </div>
+    <% } %>
+  </article>
+<% } %>
+
+<% function renderModels (data) {
+  data.models.forEach(model => { %>
+    <section class="model">
+      <% legend(false, model.name)
+
+      model.days.forEach(day => {
+        renderDay(day, false)
+      }) %>
+    </section>
+  <% })
+} %>
+
 <h1>Wind forecasts</h1>
-<button type="button" name="switch-light-dark" id="switch-light-dark">Dark mode</button>
+<button type="button" name="switch-light-dark" id="switch-light-dark">Light mode</button>
 
 <h2>Spot: <%= windfinder.spot %></h2>
-<h4>Windfinder</h4>
-<table>
-  <thead>
-    <tr>
-      <th class="model-name">gfs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Local time</th>
-      <% for(let i=0; i < windfinder.time.length; i++) { %>
-        <td><%= windfinder.time[i] %>h</td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Winddirection</th>
-        <% for(let i=0; i < windfinder.winddirection.length; i++) { %>
-          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= windfinder.winddirection[i] - 180 %>deg)"></td>
-        <% } %>
-    </tr>
-    <tr>
-      <th>Average windspeed</th>
-      <% for(let i=0; i < windfinder.windspeed.length; i++) { %>
-        <td style="background-color: <%= colors.background[windfinder.windspeed[i]]%>; color: <%= colors.text[windfinder.windspeed[i]] %>"><%= windfinder.windspeed[i] %></td>
-      <% } %>
-    </tr>
-    <tr>
-      <th>Wind gusts</th>
-      <% for(let i=0; i < windfinder.windgust.length; i++) { %>
-        <td style="background-color: <%= colors.background[windfinder.windgust[i]]%>; color: <%= colors.text[windfinder.windgust[i]] %>"><%= windfinder.windgust[i] %></td>
-      <% } %>
-    </tr>
-  </tbody>
-</table>
 
-<h4>Windguru</h4>
-<% function renderWindguru (model) { %>
-  <table>
-    <thead>
-      <tr>
-        <th class="model-name"><%= model.name %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Local time</th>
-        <% model.time.forEach(hour => { %>
-          <td><%= hour %>h</td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Winddirection</th>
-        <% model.winddirection.forEach(winddirection => { %>
-          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= winddirection %>deg)"></td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Average windspeed</th>
-        <% model.windspeed.forEach(speed => { %>
-          <td style="background-color: <%= colors.background[speed] %>; color: <%= colors.text[speed] %>"><%= speed %></td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Wind gusts</th>
-        <% model.windgust.forEach(gust => { %>
-          <td style="background-color: <%= colors.background[gust] %>; color:<%= colors.text[gust] %>"><%= gust %></td>
-        <% }) %>
-      </tr>
-    </tbody>
-  </table>
-<% } %>
+<main>
+  <h4>Windfinder</h4>
+  <section class="model">
+    <% legend(true) %>
 
-<% windguru.models.forEach(model => renderWindguru(model)) %>
+    <% windfinder.days.forEach(day => {
+      renderDay(day, true)
+    }) %>
+  </section>
 
-<h4>Windy</h4>
-<% function renderWindy (model) { %>
-  <table>
-    <thead>
-      <tr>
-        <th class="model-name"><%= model.name %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Local time</th>
-        <% model.time.forEach(hour => { %>
-          <td><%= hour %>h</td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Winddirection</th>
-        <% model.winddirection.forEach(winddirection => { %>
-          <td><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= winddirection - 180 %>deg)"></td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Average windspeed</th>
-        <% model.windspeed.forEach(speed => { %>
-          <td style="background-color: <%= colors.background[speed] %>; color: <%= colors.text[speed] %>"><%= speed %></td>
-        <% }) %>
-      </tr>
-      <tr>
-        <th>Wind gusts</th>
-        <% model.windgust.forEach(gust => { %>
-          <td style="background-color: <%= colors.background[gust] %>; color:<%= colors.text[gust] %>"><%= gust %></td>
-        <% }) %>
-      </tr>
-    </tbody>
-  </table>
-<% } %>
+  <h4>Windguru</h4>
+  <% renderModels(windguru) %>
 
-<% windy.models.forEach(model => renderWindy(model)) %>
+  <h4>Windy</h4>
+  <% renderModels(windy) %>
+</main>
 
 <% include tail %>
