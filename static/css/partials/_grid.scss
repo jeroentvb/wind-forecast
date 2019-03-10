@@ -41,6 +41,10 @@ article {
 
 .legend {
   min-width: 10rem;
+  .row {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .forecast {
@@ -50,6 +54,7 @@ article {
 .row {
   padding: 2px 0;
   min-width: 4rem;
+  height: 36px;
   div {
     display: inline-block;
     min-width: 2.2rem;

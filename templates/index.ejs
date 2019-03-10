@@ -166,6 +166,7 @@ text: [
         Temperature
       </div>
     <% } %>
+
   </article>
 <% } %>
 
@@ -202,7 +203,7 @@ text: [
     <% if (temp) { %>
       <div class="row">
       <% day.hours.forEach(hour => { %>
-        <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: <%= colors.text[hour.temperature] %>"><%= hour.temperature %></div>
+        <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
       <% }) %>
       </div>
     <% } %>
@@ -212,10 +213,10 @@ text: [
 <% function renderModels (data) {
   data.models.forEach(model => { %>
     <section class="model">
-      <% legend(false, model.name)
+      <% legend(model.days[0].hours[0].temperature, model.name)
 
       model.days.forEach(day => {
-        renderDay(day, false)
+        renderDay(day, day.hours[0].temperature)
       }) %>
     </section>
   <% })
@@ -228,6 +229,7 @@ text: [
 
 <main>
   <h4>Windfinder</h4>
+  <p><a href="<%= windfinder.url %>" target="_blank">Go to website</a></p>
   <section class="model">
     <% legend(true) %>
 
@@ -237,9 +239,11 @@ text: [
   </section>
 
   <h4>Windguru</h4>
+  <p><a href="<%= windguru.url %>" target="_blank">Go to website</a></p>
   <% renderModels(windguru) %>
 
   <h4>Windy</h4>
+  <p><a href="<%= windy.url %>" target="_blank">Go to website</a></p>
   <% renderModels(windy) %>
 </main>
 
