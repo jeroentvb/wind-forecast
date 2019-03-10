@@ -4,20 +4,18 @@ const scrape = require('wind-scrape')
 const Helper = require('jeroentvb-helper')
 const config = require('./app-config.json')
 
-var lastScrape = 5 // Set default at 5 in the morning
-
 module.exports = express()
   .set('view engine', 'ejs')
   .set('views', 'templates')
   .use(express.static('static'))
   .get('/', index)
   .use(notFound)
-  .listen(config.port, () => console.log(chalk.green(`Server listening on port ${config.port}...`)))
+  .listen(config.port, () => console.log(chalk.green(`[server] listening on port ${config.port}...`)))
 
 function index (req, res) {
   let currentHour = new Date().getHours()
-  if (lastScrape !== currentHour && config.useOfflineData === false) {
-    lastScrape = currentHour
+  if (config.lastScrape !== currentHour && config.useOfflineData === false) {
+    config.lastScrape = currentHour
     useLiveData(res)
   } else {
     useOfflineData(res)
@@ -25,13 +23,14 @@ function index (req, res) {
 }
 
 function useLiveData (res) {
-  console.log('Using live data')
+  if (config.verbose) console.log('[server] Using live data')
   Promise.all([
     scrape.windfinder(config.windfinderSpotName),
     scrape.windguru(config.windguruSpotNumber, config.windguruModels),
     scrape.windy(config.windy.lang, config.windy.long)
   ])
     .then(data => {
+      if (config.verbose) console.log(`[server] received data`)
       Helper.exportToFile('offline-data', data)
       res.render('index', {
         page: 'Wind forecast',
@@ -44,7 +43,7 @@ function useLiveData (res) {
 }
 
 function useOfflineData (res) {
-  console.log('Using offline data')
+  if (config.verbose) console.log('[server] Using offline data')
   let offlineData = require('./offline-data-export.json')
   res.render('index', {
     page: 'Wind forecast',
