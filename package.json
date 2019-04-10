@@ -1,6 +1,6 @@
 {
   "name": "wind-forecast",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An app to gather wind forecast data from different services",
   "main": "index.js",
   "scripts": {
