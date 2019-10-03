@@ -1,20 +1,19 @@
 {
   "port": 25560,
-  "useOfflineData": true,
-  "verbose": true,
+  "useOfflineData": false,
+  "verbose": false,
   "lastScrape": 5,
-  "windfinderSpotName": "markermeer_schellinkhout",
-  "windguruSpotNumber": "46940",
+  "windfinderSpotName": "tarifa",
+  "windguruSpotNumber": "43",
   "windguruModels": [
-    2,
-    1,
-    4,
-    5,
     0,
-    3
+    2,
+    3,
+    4,
+    5
   ],
   "windy": {
-    "lang": "52.631",
-    "long": "5.122"
+    "lang": "36.012",
+    "long": "-5.611"
   }
 }

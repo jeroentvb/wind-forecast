@@ -154,15 +154,18 @@ text: [
       <div class="unit">Winddirection</div>
       <div class="unit">Average windspeed</div>
       <div class="unit">Wind gusts</div>
-      <div class="unit">Temperature</div>
+
+      <% if (temp) { %>
+        <div class="unit">Temperature</div>
+      <% } %>
     </div>
   </article>
 <% } %>
 
-<% function renderDay (day, temp) { %>
+<% function renderDay (day, temp, modelname = 'GFS') { %>
   <article class="forecast">
     <div class="heading row">
-      <%= day.date %>
+      <%= day.date %> - <%= modelname %>
     </div>
 
     <div class="forecast-container">
@@ -175,7 +178,10 @@ text: [
                 <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
                 <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
                 <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
-                <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
+                
+                <% if (temp) { %>
+                  <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
+                <% } %>
               <% }
             }) %>
         </div>
@@ -192,7 +198,7 @@ text: [
       <% legend(model.days[0].hours[0].temperature, model.name)
 
       model.days.forEach(day => {
-        renderDay(day, day.hours[0].temperature)
+        renderDay(day, day.hours[0].temperature, model.name)
       }) %>
     </section>
   <% })
