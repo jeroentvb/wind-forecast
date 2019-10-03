@@ -148,65 +148,47 @@ text: [
     <div class="heading row">
       <%= modelName %>
     </div>
-    <div class="row">
-      Local time
-    </div>
-    <div class="row">
-      Winddirection
-    </div>
-    <div class="row">
-      Average windspeed
-    </div>
-    <div class="row">
-      Wind gusts
-    </div>
 
-    <% if (temp) { %>
-      <div class="row">
-        Temperature
-      </div>
-    <% } %>
+    <div class="column">
+      <div class="unit">Local time</div>
+      <div class="unit">Winddirection</div>
+      <div class="unit">Average windspeed</div>
+      <div class="unit">Wind gusts</div>
 
+      <% if (temp) { %>
+        <div class="unit">Temperature</div>
+      <% } %>
+    </div>
   </article>
 <% } %>
 
-<% function renderDay (day, temp) { %>
+<% function renderDay (day, temp, modelname = 'GFS') { %>
   <article class="forecast">
     <div class="heading row">
-      <%= day.date %>
+      <%= day.date %> - <%= modelname %>
     </div>
 
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit"><%= hour.hour %>h</div>
-    <% }) %>
-    </div>
+    <div class="forecast-container">
+      <% for (let i = 8; i < 22; i++) { %>
+        <div class="column">
+            <div class="unit"><%= i %>h</div>
 
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
-    <% }) %>
-    </div>
+            <% day.hours.forEach(hour => {
+              if (hour.hour === i) { %>
+                <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
+                <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
+                <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
+                
+                <% if (temp) { %>
+                  <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
+                <% } %>
+              <% }
+            }) %>
+        </div>
+      <% } %>
 
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
-    <% }) %>
+      
     </div>
-
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
-    <% }) %>
-    </div>
-
-    <% if (temp) { %>
-      <div class="row">
-      <% day.hours.forEach(hour => { %>
-        <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
-      <% }) %>
-      </div>
-    <% } %>
   </article>
 <% } %>
 
@@ -216,7 +198,7 @@ text: [
       <% legend(model.days[0].hours[0].temperature, model.name)
 
       model.days.forEach(day => {
-        renderDay(day, day.hours[0].temperature)
+        renderDay(day, day.hours[0].temperature, model.name)
       }) %>
     </section>
   <% })
@@ -228,6 +210,10 @@ text: [
 <h2>Spot: <%= windfinder.spot %></h2>
 
 <main>
+  <h4>Windguru</h4>
+  <p><a href="<%= windguru.url %>" target="_blank">Go to website</a></p>
+  <% renderModels(windguru) %>
+
   <h4>Windfinder</h4>
   <p><a href="<%= windfinder.url %>" target="_blank">Go to website</a></p>
   <section class="model">
@@ -237,10 +223,6 @@ text: [
       renderDay(day, true)
     }) %>
   </section>
-
-  <h4>Windguru</h4>
-  <p><a href="<%= windguru.url %>" target="_blank">Go to website</a></p>
-  <% renderModels(windguru) %>
 
   <h4>Windy</h4>
   <p><a href="<%= windy.url %>" target="_blank">Go to website</a></p>
