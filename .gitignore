@@ -68,3 +68,4 @@ typings/
 *-offline-data.json
 *-export.json
 *.old.ejs
+app-config.json
