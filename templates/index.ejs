@@ -144,29 +144,19 @@ text: [
 ]}%>
 
 <% function legend (temp, modelName = 'GFS') { %>
+  
   <article class="legend">
     <div class="heading row">
       <%= modelName %>
     </div>
-    <div class="row">
-      Local time
-    </div>
-    <div class="row">
-      Winddirection
-    </div>
-    <div class="row">
-      Average windspeed
-    </div>
-    <div class="row">
-      Wind gusts
-    </div>
 
-    <% if (temp) { %>
-      <div class="row">
-        Temperature
-      </div>
-    <% } %>
-
+    <div class="column">
+      <div class="unit">Local time</div>
+      <div class="unit">Winddirection</div>
+      <div class="unit">Average windspeed</div>
+      <div class="unit">Wind gusts</div>
+      <div class="unit">Temperature</div>
+    </div>
   </article>
 <% } %>
 
@@ -176,37 +166,17 @@ text: [
       <%= day.date %>
     </div>
 
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit"><%= hour.hour %>h</div>
-    <% }) %>
-    </div>
-
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
-    <% }) %>
-    </div>
-
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
-    <% }) %>
-    </div>
-
-    <div class="row">
-    <% day.hours.forEach(hour => { %>
-      <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
-    <% }) %>
-    </div>
-
-    <% if (temp) { %>
-      <div class="row">
+    <div class="forecast-container">
       <% day.hours.forEach(hour => { %>
-        <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
+        <div class="column">
+          <div class="unit"><%= hour.hour %>h</div>
+          <div class="unit"><img src="img/arrow-white.svg" alt="wind-direction-arrow" class="wind-direction-arrow" style="transform: rotate(<%= hour.winddirection - 180 %>deg)"></div>
+          <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windspeed]%>; color: <%= colors.text[hour.windspeed] %>"><%= hour.windspeed %></div>
+          <div class="unit" style="background-color: <%= colors.background.windspeed[hour.windgust]%>; color: <%= colors.text[hour.windgust] %>"><%= hour.windgust %></div>
+          <div class="unit" style="background-color: <%= colors.background.temperature[hour.temperature]%>; color: #000;"><%= hour.temperature %></div>
+        </div>
       <% }) %>
-      </div>
-    <% } %>
+    </div>
   </article>
 <% } %>
 
