@@ -1,7 +1,8 @@
 const express = require('express')
 const chalk = require('chalk')
 const scrape = require('wind-scrape')
-const Helper = require('jeroentvb-helper')
+const helper = require('./partials/helper')
+const helper2 = require('jeroentvb-helper')
 const config = require('./app-config.json')
 
 module.exports = express()
@@ -31,7 +32,8 @@ function useLiveData (res) {
   ])
     .then(data => {
       if (config.verbose) console.log(`[server] received data`)
-      Helper.exportToFile('offline-data', data)
+      data = helper.trim(data)
+      helper2.exportToFile('offline-data', data)
       res.render('index', {
         page: 'Wind forecast',
         windfinder: data[0],
