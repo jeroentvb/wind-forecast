@@ -1,3 +1,6 @@
+# Discontinued
+Since windguru released their 'windguru model mix' feature, this project's purpose has been defeated. Windguru model mix is basically what I was trying to achieve with this project, and it does it even better, by taking model resolution and last updated time into account.  
+
 ## Disclaimer
 This app scrapes data from other websites.
 Scraping websites is a grey area and may not be allowed by all websites.
