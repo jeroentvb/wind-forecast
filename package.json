@@ -4,7 +4,9 @@
   "description": "An app to gather wind forecast data from different services",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon",
+    "setupdb": "node modules/setupdb.js"
   },
   "repository": {
     "type": "git",
@@ -13,12 +15,15 @@
   "author": "jeroentvb",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
+    "dotenv": "^8.1.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "jeroentvb-helper": "github:jeroentvb/jeroentvb-helper",
+    "mongodb": "^3.3.2",
     "nodemon": "^1.19.1",
-    "wind-scrape": "github:jeroentvb/wind-scrape"
+    "wind-scrape": "https://github.com/jeroentvb/wind-scrape/releases/download/v3.0.1/dist.tgz"
   },
   "nodemonConfig": {
     "ignore": [

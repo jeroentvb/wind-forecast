@@ -1,12 +1,48 @@
 <% include ../partials/head %>
 
 <main>
-  <form action="/add-spot">
+  <form action="/submit-spot" method="POST">
     <fieldset>
       <label for="spotname">Spot name</label>
-      <input type="text" id="spotname" name="spotname">
+      <input type="text" id="spotname" name="spotname" required>
+    </fieldset>
+
+    <fieldset>
+      <label for="windfinderspot">Windfinder spot name</label>
+      <input type="text" id="windfinderspot" name=windfinderSpotName required>
+    </fieldset>
+
+    <fieldset>
+      <label for="windguruspot">Windguru spot number</label>
+      <input type="number" id="windguruspot" name="windguruSpotNumber" required>
+
+      <label for="windgurumodels">Windguru model numbers</label>
+      <p>Seperate the numbers using a <span class="code">,</span></p>
+      <input type="text" id="windgurumodels" name="windguruSpotNumbers" required pattern="^[0-9]+(,[0-9]+)*$">
+    </fieldset>
+
+    <fieldset>
+      <h3>Windy coördinates</h3>
+
+      <label for="windylat">Latitude</label>
+      <input type="number" id="windylat" name="windylat" required>
+
+      <label for="windylng">Longitude</label>
+      <input type="number" id="windylng" name="windylng" required>
+    </fieldset>
+
+    <fieldset>
+      <input type="submit">
     </fieldset>
   </form>
 </main>
+
+<script>
+  // Prevent whitespaces in the windgurumodels input field
+  const windguruModels = document.getElementById('windgurumodels')
+  windgurumodels.addEventListener('keypress', e => {  
+    if (e.keyCode === 32) e.preventDefault()
+  })
+</script>
 
 <% include ../partials/tail %>
